@@ -1,13 +1,7 @@
-# Okh Stock
+# Green Energy Store Stock Book
 
-Phone scanner for warehouse stock, jobs, returns to Okh Energy, and pickups from Okh.
+Open this in Chrome:
 
-Open the live page on your phone:
+https://htmlpreview.github.io/?https://github.com/McCoyirl147/okh-stock/blob/main/index.html
 
-**https://raw.githack.com/McCoyirl147/okh-stock/main/index.html**
-
-Tap **Scan barcode with camera**, then choose Warehouse, Job, Return to Okh, or Pickup from Okh.
-
-On iPhone use **Safari**. Share → Add to Home Screen for a full-screen app.
-
-Data stays on the phone. Use Export CSV for a backup.
+Codes: 1001 admin, 2001 staff.
