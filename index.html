@@ -7,19 +7,19 @@
 <meta name="theme-color" content="#011E41"/>
 <title>Green Energy Store · Stock book</title>
 <style>
-:root{--navy:#011E41;--blue:#1863DC;--green:#38D430;--bg:#F4F7FB;--line:#D0D7E2;--ink:#0B1C33;--muted:#5B6B80}
+:root{--navy:#011E41;--blue:#1863DC;--green:#38D430;--bg:#F4F7FB;--line:#D0D7E2;--ink:#0B1C33;--muted:#5B6B80;--ok:#D1F7D0;--low:#F8D7DA;--ok-ink:#0B5D1E;--low-ink:#842029}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 #gate,#home{position:fixed;inset:0;z-index:20;overflow:auto;padding:28px 20px 40px;background:linear-gradient(180deg,#011E41 0%,#0B2A52 42%,#1E4A75 100%);color:#fff}
 #gate.hid,#home.hid{display:none}
-.box{width:min(520px,100%);margin:0 auto}
+.box{width:min(560px,100%);margin:0 auto}
 .lockup{font-weight:800;font-size:clamp(44px,12vw,72px);line-height:.88;letter-spacing:-.04em;margin:0 0 22px}
 .sun{display:inline-block;width:.42em;height:.42em;margin-left:.06em;border-radius:50%;background:repeating-conic-gradient(from 0deg,#38D430 0 8deg,transparent 8deg 18deg);vertical-align:middle;position:relative}
 .sun:after{content:"";position:absolute;inset:26%;background:#011E41;border-radius:50%}
 h2{margin:0 0 8px;font-size:26px}
 .intro{color:#C9D7E8;margin:0 0 16px;line-height:1.4}
 label{display:block;font-size:12px;font-weight:700;color:#A9C0D8;letter-spacing:.04em;text-transform:uppercase;margin:8px 0 4px}
-input,select,textarea{width:100%;padding:12px;border:0;border-radius:10px;font-size:16px}
+input,select,textarea{width:100%;padding:12px;border:0;border-radius:10px;font-size:16px;background:#fff;color:var(--ink)}
 .btn{display:block;width:100%;height:48px;border:0;border-radius:10px;background:#38D430;color:#011E41;font-weight:800;font-size:16px;margin-top:12px}
 .tile{width:100%;text-align:left;background:#fff;color:var(--ink);border:0;border-radius:14px;padding:16px;margin:0 0 10px}
 .tile b{display:block;font-size:18px}
@@ -39,7 +39,35 @@ body.page main{display:block}
 .who{margin-left:auto;background:none;border:0;color:#fff;text-decoration:underline}
 .need:after{content:" *";color:#e11d48}
 .btn.danger{background:#fff;color:#842029;border:1px solid #f1b0b7;height:auto;padding:10px}
-</style></head>
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:800}
+.badge.ok{background:var(--ok);color:var(--ok-ink)}
+.badge.low{background:var(--low);color:var(--low-ink)}
+.bell{position:relative;background:#fff;color:var(--navy);border:0;border-radius:10px;padding:8px 12px;font-weight:800}
+.bell .dot{position:absolute;top:-4px;right:-4px;background:#e11d48;color:#fff;border-radius:50%;min-width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.drop{position:absolute;right:14px;top:54px;width:min(340px,90vw);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);z-index:30;max-height:60vh;overflow:auto}
+.drop .drow{display:flex;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.drop .drow:last-child{border-bottom:0}
+.drop .x{margin-left:auto;background:none;border:0;color:var(--muted);font-size:18px;font-weight:700}
+.bellwrap{position:relative;margin-left:auto}
+.img{width:56px;height:56px;border-radius:8px;object-fit:cover;background:#eef2f7;flex:none}
+.srow{display:flex;align-items:center;gap:10px}
+.srow .meta{flex:1;min-width:0}
+.srow .meta b{display:block;font-size:15px}
+.srow .meta .sub{color:var(--muted);font-size:12px}
+.qty{font-size:22px;font-weight:800;color:var(--navy)}
+.qty small{display:block;font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+.scanbtn{display:inline-block;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:8px 12px;font-weight:700;font-size:13px;margin-top:8px}
+.cam{position:fixed;inset:0;z-index:40;background:#000;display:none;flex-direction:column}
+.cam.on{display:flex}
+.cam video{flex:1;width:100%;object-fit:cover}
+.cam .bar{padding:12px;background:#111;color:#fff;display:flex;gap:8px}
+.cam .bar button{flex:1;height:44px;border:0;border-radius:8px;font-weight:700}
+.cam .x{background:#333;color:#fff}
+.cam .go{background:var(--green);color:#011E41}
+#reader{flex:1}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#011E41;color:#fff;padding:12px 16px;border-radius:10px;z-index:50;font-size:14px;max-width:90vw}
+</style>
+</head>
 <body>
 <div id="gate"><div class="box">
 <div class="lockup">Green<span class="sun"></span><br>Energy<br>Store</div>
@@ -63,68 +91,166 @@ body.page main{display:block}
 <header>
 <button class="back" onclick="goHome()">← Home</button>
 <div><b id="pageTitle">Page</b></div>
+<div class="bellwrap" id="bellwrap" style="display:none">
+<button class="bell" onclick="toggleDrop()">Alerts <span class="dot" id="bellDot" style="display:none">0</span></button>
+<div class="drop" id="drop" style="display:none"></div>
+</div>
 <button class="who" onclick="logout()">Switch user</button>
 </header>
 <main>
-<section class="panel" id="p-stock"><p class="hint">Warehouse shelf.</p><div class="card"><input id="q" placeholder="Search" oninput="drawStock()"/><div id="stockList"></div></div></section>
-<section class="panel" id="p-delivery"><p class="hint">Goods In / Deliveries.</p><div class="card">
-<label>Item</label><input id="d-item"/>
-<div class="row"><div><label>Qty</label><input id="d-qty" type="number" value="1"/></div><div><label>Cost £</label><input id="d-cost" type="number" step="0.01"/></div></div>
+<section class="panel" id="p-stock">
+<div class="card">
+<div class="row"><div><label>Section</label><select id="s-sec" onchange="fillMan()"><option value="">All sections</option></select></div>
+<div><label>Manufacturer</label><select id="s-man" onchange="fillItem()"><option value="">All manufacturers</option></select></div></div>
+<div class="row"><div><label>Item</label><select id="s-item" onchange="pickItem()"><option value="">All items</option></select></div>
+<div><label>Search</label><input id="q" placeholder="Code or name" oninput="drawStock()"/></div></div>
+<button class="scanbtn" onclick="openCam('stock')">📷 Scan label to add</button>
+<div id="stockList" style="margin-top:12px"></div>
+</div></section>
+<section class="panel" id="p-delivery">
+<div class="card">
+<label>Section</label><select id="d-sec" onchange="fillMan('d')"></select>
+<label>Manufacturer</label><select id="d-man" onchange="fillItem('d')"></select>
+<label>Item</label><select id="d-item" onchange="pickDel()"></select>
+<div class="row"><div><label>Qty</label><input id="d-qty" type="number" value="1"/></div><div><label>Cost £ each</label><input id="d-cost" type="number" step="0.01"/></div></div>
 <label>Supplier</label><input id="d-sup"/>
+<label>Order / invoice no</label><input id="d-ord"/>
 <label>Received by</label><input id="d-by"/>
-<button class="btn" onclick="addIn()">Add goods in</button><p class="msg" id="d-msg"></p><div id="buyList"></div></div></section>
-<section class="panel" id="p-jobs"><p class="hint">Stock 2 Site. Job site required.</p><div class="card">
+<button class="btn" onclick="addIn()">Add goods in</button><p class="msg" id="d-msg"></p>
+<div id="buyList"></div>
+<div style="margin-top:14px"><b>Purchase history</b><div id="histList"></div></div>
+</div></section>
+<section class="panel" id="p-jobs">
+<div class="card">
 <label>Date taken</label><input id="j-date" type="date"/>
 <label class="need">Job site</label><input id="j-site"/>
-<label>Item</label><input id="j-item"/>
+<div class="row"><div><label>Section</label><select id="j-sec" onchange="fillMan('j')"></select></div>
+<div><label>Manufacturer</label><select id="j-man" onchange="fillItem('j')"></select></div></div>
+<label>Item used</label><select id="j-item" onchange="pickJob()"></select>
 <div class="row"><div><label>Serial</label><input id="j-serial"/></div><div><label>Qty</label><input id="j-qty" type="number" value="1"/></div></div>
-<button class="btn" onclick="addJob()">Log item to site</button><p class="msg" id="j-msg"></p><div id="jobList"></div></div></section>
-<section class="panel" id="p-collections"><p class="hint">Collections / Purchases.</p><div class="card">
+<button class="scanbtn" onclick="openCam('job')">📷 Scan label onto job</button>
+<button class="btn" onclick="addJob()">Log item to site</button><p class="msg" id="j-msg"></p>
+<div id="jobList"></div>
+</div></section>
+<section class="panel" id="p-collections">
+<div class="card">
 <label>Sale type</label><select id="c-type"><option>Cash sale</option><option>Account</option></select>
-<label>Item</label><input id="c-item"/>
+<div class="row"><div><label>Section</label><select id="c-sec" onchange="fillMan('c')"></select></div>
+<div><label>Manufacturer</label><select id="c-man" onchange="fillItem('c')"></select></div></div>
+<label>Item</label><select id="c-item"></select>
+<label>Reference</label><input id="c-ref"/>
 <label>Print name</label><input id="c-name"/>
-<button class="btn" onclick="addCol()">Save collection</button><div id="colList"></div></div></section>
-<section class="panel" id="p-ohk"><p class="hint">AiO Konnect.</p><div class="card"><label>Serial</label><input id="o-serial"/><button class="btn" onclick="addOhk()">Add serial</button><div id="ohkList"></div></div></section>
-<section class="panel" id="p-faulty"><p class="hint">Faulty item + what is wrong.</p><div class="card"><label>Serial</label><input id="f-serial"/><label>What is wrong</label><textarea id="f-note" rows="3"></textarea><button class="btn" onclick="addFault()">Save faulty</button><div id="faultList"></div></div></section>
-<section class="panel" id="p-log"><p class="hint">Who took what and when.</p><div class="card"><label>Admin emails</label><input id="emails"/><button class="btn" onclick="mailLog()">Email this month log</button><div id="logList"></div></div></section>
-<section class="panel" id="p-people"><p class="hint">Login codes.</p><div class="card"><label>Code</label><input id="p-code"/><label>Name</label><input id="p-name"/><label>Access</label><select id="p-role"><option value="staff">Staff</option><option value="admin">Admin</option></select><button class="btn" onclick="addPerson()">Add person</button><div id="peopleList"></div></div></section>
+<div class="sigwrap"><canvas id="sig" width="520" height="140" style="width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;touch-action:none"></canvas>
+<div style="display:flex;gap:8px;margin-top:6px"><button class="btn danger" style="flex:1" onclick="clearSig()">Clear signature</button></div></div>
+<button class="btn" onclick="addCol()">Save collection</button><p class="msg" id="c-msg"></p>
+<div id="colList"></div>
+</div></section>
+<section class="panel" id="p-ohk">
+<div class="card"><label>Serial</label><input id="o-serial"/>
+<button class="scanbtn" onclick="openCam('ohk')">📷 Scan label</button>
+<button class="btn" onclick="addOhk()">Add serial</button>
+<div id="ohkList"></div></div></section>
+<section class="panel" id="p-faulty">
+<div class="card"><label>Serial</label><input id="f-serial"/>
+<label>What is wrong</label><textarea id="f-note" rows="3"></textarea>
+<button class="btn" onclick="addFault()">Save faulty</button>
+<div id="faultList"></div></div></section>
+<section class="panel" id="p-log">
+<div class="card"><label>Admin emails (comma separated)</label><input id="emails"/>
+<button class="btn" onclick="mailLog()">Email this month's log</button>
+<div id="logList"></div></div></section>
+<section class="panel" id="p-people">
+<div class="card"><label>Code</label><input id="p-code"/>
+<label>Name</label><input id="p-name"/>
+<label>Access</label><select id="p-role"><option value="staff">Staff</option><option value="admin">Admin</option></select>
+<button class="btn" onclick="addPerson()">Add person</button>
+<div id="peopleList"></div></div></section>
 </main>
+<div class="cam" id="cam">
+<div id="reader"></div>
+<div class="bar">
+<button class="x" onclick="closeCam()">Cancel</button>
+<button class="go" onclick="snapCam()">Use photo</button>
+</div>
+</div>
+<div class="toast" id="toast" style="display:none"></div>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script>
-const KEY="ges-book-v2",SESS="ges-book-session";
+const KEY="ges-book-v3",SESS="ges-book-session";
+const CATALOG={
+ Storage:{AiO:[["AiO-5K","AiO Konnect 5K-AiO 5.12kWh"],["AiO-10K","AiO Konnect 10K-AiO 10.24kWh"]],Hypontech:[["H4850","Hypontech H4850 4.8kWh"],["H7680","Hypontech H7680 7.6kWh"]],Solis:[["S5-EH1P6K-L","Solis S5-EH1P6K-L 6kWh"],["S6-EH3P10K-H","Solis S6-EH3P10K-H 10kWh"]],Victron:[["PMP122160000","Victron MultiPlus 12/1600/70"],["PMP242305000","Victron MultiPlus 24/2300/50"],["PMP482305000","Victron MultiPlus 48/2300/50"],["PMP483150000","Victron MultiPlus 48/3000/35"],["PMP482505000","Victron MultiPlus 48/5000/70"],["PMP123020000","Victron MultiPlus-II 12/3000/120"],["PMP242505010","Victron MultiPlus-II 24/5000/120"],["PMP482505010","Victron MultiPlus-II 48/5000/70"],["QUA482505010","Victron Quattro 48/5000/70"],["QUA241505010","Victron Quattro 24/5000/120"]],Pylontech:[["US2000C","Pylontech US2000C 2.4kWh"],["US3000C","Pylontech US3000C 3.5kWh"],["US5000","Pylontech US5000 4.8kWh"],["Force H2","Pylontech Force H2 7.1kWh"]],Dyness:[["A48100","Dyness A48100 4.8kWh"],["Tower T7","Dyness Tower T7 7.1kWh"],["B4850","Dyness B4850 2.4kWh"]],Soluna:[["Soluna 5K","Soluna 5K 5.12kWh"],["Soluna 10K","Soluna 10K 10.24kWh"]]},
+ Inverters:{Solis:[["S5-GR1P3K","Solis S5 3kW single"],["S5-GR1P5K","Solis S5 5kW single"],["S5-GR1P6K","Solis S5 6kW single"],["S5-GC3P5K","Solis S5 5kW three"],["S5-GC3P10K","Solis S5 10kW three"],["S6-GC3P15K","Solis S6 15kW three"],["S6-GC3P20K","Solis S6 20kW three"],["S6-GC3P25K","Solis S6 25kW three"],["S6-GC3P30K","Solis S6 30kW three"],["S6-GC3P36K","Solis S6 36kW three"],["S6-GC3P40K","Solis S6 40kW three"],["S6-GC3P50K","Solis S6 50kW three"],["S6-GC3P60K","Solis S6 60kW three"]],Hypontech:[["HHT-3000","Hypontech HHT 3kW"],["HHT-5000","Hypontech HHT 5kW"],["HHT-6000","Hypontech HHT 6kW"],["HHT-8000","Hypontech HHT 8kW"],["HHT-10000","Hypontech HHT 10kW"],["HHT-12000","Hypontech HHT 12kW"],["HHT-15000","Hypontech HHT 15kW"],["HHT-17000","Hypontech HHT 17kW"],["HHT-20000","Hypontech HHT 20kW"],["HHT-25000","Hypontech HHT 25kW"],["HHT-30000","Hypontech HHT 30kW"],["HHT-33000","Hypontech HHT 33kW"],["HHT-36000","Hypontech HHT 36kW"],["HHT-40000","Hypontech HHT 40kW"],["HHT-50000","Hypontech HHT 50kW"],["HHT-60000","Hypontech HHT 60kW"]]},
+ Mounting:{GSE:[["ART105162","GSE portrait half-frame H16"],["ART105729","GSE portrait half-frame H19"],["ART106310","GSE portrait half-frame H21"],["ART106485","GSE landscape half-frame"],["ART105897","GSE end clamp H16"],["ART105904","GSE end clamp H19"],["ART106723","GSE end clamp H21"],["ART106912","GSE mid clamp H16"],["ART106919","GSE mid clamp H19"],["ART104644","GSE lateral flashing"],["ART106387","GSE top centre flashing"],["ART106394","GSE top junction flashing"],["ART106401","GSE top corner flashing"],["ART106408","GSE top end flashing"],["ART106443","GSE side flashing"],["ART103209","GSE flashing hook"],["ART106450","GSE screw M6x25"],["ART106467","GSE wedge"],["ART106474","GSE pop rivet"],["ART106481","GSE ground mount box base"]],Renusol:[["VS+ MET 01","Renusol VS+ MetaSole+ rail"],["VS+ END 01","Renusol VS+ end clamp"],["VS+ MID 01","Renusol VS+ mid clamp"],["VS+ UNI 01","Renusol VS+ universal clamp"],["CS+ MET 01","Renusol ConSole+ rail"],["CS+ END 01","Renusol ConSole+ end clamp"],["CS+ MID 01","Renusol ConSole+ mid clamp"],["MS+ RAIL","Renusol MetaSole+ rail 4.2m"],["MS+ CLIP","Renusol MetaSole+ clip"],["RF+ HOOK","Renusol roof hook"],["RF+ SCREW","Renusol roof screw"]]},
+ Accessories:{General:[["GES-MC4","MC4 connector"],["GES-6MM","6mm solar cable (m)"],["GES-SCR","Roof screws (box)"],["GES-ISO","DC isolator"],["GES-CU","Consumer unit"],["GES-MET","Generation meter"],["GES-EAR","Earthing kit"],["GES-LAB","Warning labels set"],["GES-TIE","Cable ties (pack)"],["GES-GLD","MC4 branch connector"],["GES-FUS","String fuse holder"],["GES-SPD","Surge protection device"]]}
+};
 const PAGES={stock:{title:"Stock",note:"Warehouse shelf"},delivery:{title:"Goods In / Deliveries",note:"Incoming goods"},jobs:{title:"Stock 2 Site",note:"Taken to a job"},collections:{title:"Collections / Purchases",note:"Walk-in sales"},ohk:{title:"AiO Konnect",note:"Returns to OHK"},faulty:{title:"Faulty",note:"Fault + comment"},log:{title:"Removal log",note:"Who took what"},people:{title:"People",note:"Codes"}};
 const STAFF=["stock","jobs","faulty","collections"];
 const ADMIN=["stock","delivery","jobs","collections","ohk","faulty","log","people"];
-let MEM={},USER=null;
+let MEM={},USER=null,CAM=null,VID=null,SNAP=null;
 function sg(k){try{return localStorage.getItem(k)}catch(e){return MEM[k]||null}}
 function ss(k,v){MEM[k]=v;try{localStorage.setItem(k,v)}catch(e){}}
 function load(){try{return JSON.parse(sg(KEY)||"")}catch(e){return null}}
 function save(){ss(KEY,JSON.stringify(state))}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
-function seed(){return{stock:[{id:uid(),product:"MC4 connector",qty:20},{id:uid(),product:"6mm solar cable (m)",qty:50}],jobs:[],ins:[],cols:[],ohk:[],faulty:[],people:[{code:"1001",name:"Admin",role:"admin"},{code:"2001",name:"Staff 1",role:"staff"},{code:"2002",name:"Staff 2",role:"staff"}],emails:""}}
+function seed(){return{stock:[{id:uid(),code:"GES-MC4",product:"MC4 connector",sec:"Accessories",man:"General",qty:20,cost:1.2,reorder:5},{id:uid(),code:"GES-6MM",product:"6mm solar cable (m)",sec:"Accessories",man:"General",qty:50,cost:0.8,reorder:10},{id:uid(),code:"AiO-5K",product:"AiO Konnect 5K-AiO 5.12kWh",sec:"Storage",man:"AiO",qty:18,cost:1450,reorder:3}],jobs:[],ins:[],cols:[],ohk:[],faulty:[],people:[{code:"1001",name:"Admin",role:"admin"},{code:"2001",name:"Staff 1",role:"staff"},{code:"2002",name:"Staff 2",role:"staff"}],emails:"",dismissed:{}}}
 let state=load()||seed();
+if(!state.dismissed)state.dismissed={};
 function user(){if(USER&&USER.name)return USER;try{return JSON.parse(sg(SESS)||"{}")}catch(e){return {}}}
 function login(){var code=(document.getElementById("g-code").value||"").trim();var p=(state.people||[]).find(function(x){return String(x.code)===code});if(!p){document.getElementById("g-status").textContent="Code not recognised. Try 1001 or 2001.";return}USER={name:p.name,role:p.role,code:p.code};ss(SESS,JSON.stringify(USER));goHome()}
 function logout(){USER=null;try{localStorage.removeItem(SESS)}catch(e){}document.body.className="";document.getElementById("gate").classList.remove("hid");document.getElementById("home").classList.add("hid")}
 function allowed(){return user().role==="admin"?ADMIN:STAFF}
-function goHome(){document.getElementById("gate").classList.add("hid");document.getElementById("home").classList.remove("hid");document.body.className="";document.getElementById("hello").textContent=(user().role==="admin"?"Admin":"Staff")+" · "+(user().name||"");document.getElementById("tiles").innerHTML=allowed().map(function(k){return "<button class='tile' onclick=\"openPage('"+k+"')\"><b>"+PAGES[k].title+"</b><div class='hint'>"+PAGES[k].note+"</div></button>"}).join("")}
-function openPage(k){if(allowed().indexOf(k)<0)return;document.body.className="page";document.getElementById("home").classList.add("hid");document.getElementById("pageTitle").textContent=PAGES[k].title;document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("on",p.id==="p-"+k)});if(k==="delivery")document.getElementById("d-by").value=user().name||"";if(k==="jobs"&&!document.getElementById("j-date").value)document.getElementById("j-date").value=new Date().toISOString().slice(0,10);if(k==="log")document.getElementById("emails").value=state.emails||"";draw()}
-function drawStock(){var q=(document.getElementById("q").value||"").toLowerCase();var rows=(state.stock||[]).filter(function(s){return !q||(s.product||"").toLowerCase().indexOf(q)>=0});document.getElementById("stockList").innerHTML=rows.map(function(s){return "<div class='item'><b>"+s.product+"</b><div>Available "+s.qty+"</div></div>"}).join("")||"<p class='hint'>No stock yet.</p>"}
-function addIn(){var product=document.getElementById("d-item").value.trim();var qty=+document.getElementById("d-qty").value||1;if(!product)return alert("Type the item");var line=state.stock.find(function(s){return s.product===product});if(line)line.qty+=qty;else state.stock.push({id:uid(),product:product,qty:qty});state.ins.unshift({id:uid(),date:new Date().toISOString().slice(0,10),product:product,qty:qty,cost:+document.getElementById("d-cost").value||0,supplier:document.getElementById("d-sup").value,by:document.getElementById("d-by").value||user().name});save();document.getElementById("d-msg").textContent="Added "+qty+" "+product;draw()}
-function addJob(){var site=document.getElementById("j-site").value.trim();var product=document.getElementById("j-item").value.trim();var qty=+document.getElementById("j-qty").value||1;if(!site)return alert("Job site must be filled in.");if(!product)return alert("Type the item.");var line=state.stock.find(function(s){return s.product===product&&s.qty>0});if(line){line.qty=Math.max(0,line.qty-qty);if(line.qty===0)state.stock=state.stock.filter(function(s){return s.id!==line.id})}state.jobs.unshift({id:uid(),date:document.getElementById("j-date").value||new Date().toISOString().slice(0,10),site:site,product:product,serial:document.getElementById("j-serial").value,qty:qty,by:user().name});save();document.getElementById("j-msg").textContent="Logged to "+site;draw()}
-function addCol(){var product=document.getElementById("c-item").value.trim();if(!product)return alert("Type the item");state.cols.unshift({id:uid(),type:document.getElementById("c-type").value,product:product,name:document.getElementById("c-name").value,by:user().name});var line=state.stock.find(function(s){return s.product===product});if(line)line.qty=Math.max(0,line.qty-1);save();draw()}
-function addOhk(){var s=document.getElementById("o-serial").value.trim();if(!s)return;state.ohk.unshift({id:uid(),serial:s});save();draw()}
-function addFault(){var s=document.getElementById("f-serial").value.trim(),n=document.getElementById("f-note").value.trim();if(!s||!n)return alert("Serial and what is wrong are required");state.faulty.unshift({id:uid(),serial:s,note:n,by:user().name});save();draw()}
+function goHome(){document.getElementById("gate").classList.add("hid");document.getElementById("home").classList.remove("hid");document.body.className="";document.getElementById("hello").textContent=(user().role==="admin"?"Admin":"Staff")+" · "+(user().name||"");document.getElementById("tiles").innerHTML=allowed().map(function(k){return "<button class='tile' onclick=\"openPage('"+k+"')\"><b>"+PAGES[k].title+"</b><div class='hint'>"+PAGES[k].note+"</div></button>"}).join("");document.getElementById("bellwrap").style.display=user().role==="admin"?"block":"none";updateBell();draw()}
+function openPage(k){if(allowed().indexOf(k)<0)return;document.body.className="page";document.getElementById("home").classList.add("hid");document.getElementById("pageTitle").textContent=PAGES[k].title;document.querySelectorAll(".panel").forEach(function(p){p.classList.toggle("on",p.id==="p-"+k)});if(k==="delivery"){document.getElementById("d-by").value=user().name||"";fillCat("d")}if(k==="jobs"){if(!document.getElementById("j-date").value)document.getElementById("j-date").value=new Date().toISOString().slice(0,10);fillCat("j")}if(k==="collections")fillCat("c");if(k==="log")document.getElementById("emails").value=state.emails||"";if(k==="stock")fillCat("s");draw()}
+function secs(){return Object.keys(CATALOG)}
+function mans(sec){return sec&&CATALOG[sec]?Object.keys(CATALOG[sec]):[]}
+function items(sec,man){return sec&&man&&CATALOG[sec][man]?CATALOG[sec][man]:[]}
+function fillCat(p){var s=document.getElementById(p+"-sec");if(!s)return;s.innerHTML='<option value="">All sections</option>'+secs().map(function(x){return "<option>"+x+"</option>"}).join("");fillMan(p)}
+function fillMan(p){var s=document.getElementById(p+"-sec"),m=document.getElementById(p+"-man");if(!m)return;var sec=s?s.value:"";m.innerHTML='<option value="">All manufacturers</option>'+mans(sec).map(function(x){return "<option>"+x+"</option>"}).join("");fillItem(p)}
+function fillItem(p){var s=document.getElementById(p+"-sec"),m=document.getElementById(p+"-man"),it=document.getElementById(p+"-item");if(!it)return;var sec=s?s.value:"",man=m?m.value:"";it.innerHTML='<option value="">All items</option>'+items(sec,man).map(function(x){return "<option value='"+x[0]+"'>"+x[0]+" · "+x[1]+"</option>"}).join("")}
+function pickItem(){var it=document.getElementById("s-item");if(it&&it.value){var q=document.getElementById("q");q.value=it.value;drawStock()}}
+function pickDel(){var it=document.getElementById("d-item");if(!it||!it.value)return;var found=null;secs().forEach(function(sec){mans(sec).forEach(function(man){items(sec,man).forEach(function(x){if(x[0]===it.value)found={sec:sec,man:man,code:x[0],name:x[1]}})})});if(found){var line=(state.ins||[]).concat(state.stock||[]).reverse().find(function(i){return i.code===found.code});if(line&&line.cost)document.getElementById("d-cost").value=line.cost;var ex=state.stock.find(function(s){return s.code===found.code});if(ex)document.getElementById("d-qty").value=1}}
+function pickJob(){var it=document.getElementById("j-item");if(!it||!it.value)return;var ex=state.stock.find(function(s){return s.code===it.value});if(ex){document.getElementById("j-qty").value=1}}
+function stockQty(code){return (state.stock||[]).filter(function(s){return s.code===code}).reduce(function(a,s){return a+s.qty},0)}
+function addIn(){var code=document.getElementById("d-item").value;if(!code)return alert("Pick an item");var qty=+document.getElementById("d-qty").value||1;var cost=+document.getElementById("d-cost").value||0;var sup=document.getElementById("d-sup").value.trim();var ord=document.getElementById("d-ord").value.trim();var by=document.getElementById("d-by").value.trim()||user().name;var found=null;secs().forEach(function(sec){mans(sec).forEach(function(man){items(sec,man).forEach(function(x){if(x[0]===code)found={sec:sec,man:man,code:x[0],name:x[1]}})})});if(!found)return;var line=state.stock.find(function(s){return s.code===code});if(line){line.qty+=qty;if(cost)line.cost=cost}else state.stock.push({id:uid(),code:found.code,product:found.name,sec:found.sec,man:found.man,qty:qty,cost:cost,reorder:Math.max(1,Math.round(qty*0.2))});state.ins.unshift({id:uid(),date:new Date().toISOString().slice(0,10),code:found.code,product:found.name,qty:qty,cost:cost,supplier:sup,ord:ord,by:by});save();document.getElementById("d-msg").textContent="Added "+qty+" "+found.name+". Available now: "+stockQty(code);toast("Added "+qty+" · available "+stockQty(code));draw()}
+function addJob(){var site=document.getElementById("j-site").value.trim();var code=document.getElementById("j-item").value;var qty=+document.getElementById("j-qty").value||1;if(!site)return alert("Job site must be filled in.");if(!code)return alert("Pick an item.");var found=null;secs().forEach(function(sec){mans(sec).forEach(function(man){items(sec,man).forEach(function(x){if(x[0]===code)found={sec:sec,man:man,code:x[0],name:x[1]}})})});if(!found)return;var line=state.stock.find(function(s){return s.code===code&&s.qty>0});if(line){line.qty=Math.max(0,line.qty-qty);if(line.qty===0)state.stock=state.stock.filter(function(s){return s.id!==line.id})}state.jobs.unshift({id:uid(),date:document.getElementById("j-date").value||new Date().toISOString().slice(0,10),site:site,code:found.code,product:found.name,serial:document.getElementById("j-serial").value,qty:qty,cost:line?line.cost:0,by:user().name});save();document.getElementById("j-msg").textContent="Logged to "+site;toast(found.name+" → "+site);draw()}
+function addCol(){var code=document.getElementById("c-item").value;if(!code)return alert("Pick an item");var found=null;secs().forEach(function(sec){mans(sec).forEach(function(man){items(sec,man).forEach(function(x){if(x[0]===code)found={code:x[0],name:x[1]}})})});if(!found)return;var line=state.stock.find(function(s){return s.code===code});var cost=line?line.cost:0;state.cols.unshift({id:uid(),date:new Date().toISOString().slice(0,10),type:document.getElementById("c-type").value,code:found.code,product:found.name,ref:document.getElementById("c-ref").value,name:document.getElementById("c-name").value,cost:cost,by:user().name,sig:getSig()});if(line)line.qty=Math.max(0,line.qty-1);save();document.getElementById("c-msg").textContent="Saved";clearSig();draw()}
+function addOhk(){var s=document.getElementById("o-serial").value.trim();if(!s)return;if(state.ohk.find(function(o){return o.serial===s})){toast("Already on list");return}state.ohk.unshift({id:uid(),serial:s,date:new Date().toISOString().slice(0,10)});save();document.getElementById("o-serial").value="";draw()}
+function addFault(){var s=document.getElementById("f-serial").value.trim(),n=document.getElementById("f-note").value.trim();if(!s||!n)return alert("Serial and what is wrong are required");state.faulty.unshift({id:uid(),serial:s,note:n,by:user().name,date:new Date().toISOString().slice(0,10)});var line=state.stock.find(function(x){return x.code===s});if(line){line.qty=Math.max(0,line.qty-1)}save();draw()}
 function addPerson(){var code=document.getElementById("p-code").value.trim(),name=document.getElementById("p-name").value.trim();if(!code||!name)return;state.people.push({code:code,name:name,role:document.getElementById("p-role").value});save();draw()}
-function mailLog(){state.emails=document.getElementById("emails").value.trim();save();var m=new Date().toISOString().slice(0,7);var rows=state.jobs.filter(function(j){return String(j.date||"").slice(0,7)===m});var body="Green Energy Store stock taken "+m+"\n\n";rows.forEach(function(j){body+=j.date+" | "+j.by+" | "+j.site+" | "+j.product+" | qty "+j.qty+"\n"});location.href="mailto:"+encodeURIComponent(state.emails)+"?subject="+encodeURIComponent("GES monthly stock log")+"&body="+encodeURIComponent(body)}
-function row(h){return "<div class='item'>"+h+"</div>"}
+function delJob(id){var j=state.jobs.find(function(x){return x.id===id});if(!j)return;if(!confirm("Delete and put back into stock?"))return;var line=state.stock.find(function(s){return s.code===j.code});if(line)line.qty+=j.qty;else state.stock.push({id:uid(),code:j.code,product:j.product,sec:j.sec,man:j.man,qty:j.qty,cost:j.cost,reorder:1});state.jobs=state.jobs.filter(function(x){return x.id!==id});save();draw()}
+function lowItems(){var out=[];(state.stock||[]).forEach(function(s){var sold=(state.jobs||[]).concat(state.cols||[]).filter(function(x){return x.code===s.code}).length;var regular=sold>=2;if(regular&&s.qty<=(s.reorder||0)&&!state.dismissed[s.code])out.push(s)});return out}
+function updateBell(){var n=lowItems().length;var d=document.getElementById("bellDot");if(d){d.style.display=n?"flex":"none";d.textContent=n}}
+function toggleDrop(){var d=document.getElementById("drop");d.style.display=d.style.display=="block"?"none":"block";if(d.style.display=="block"){d.innerHTML=lowItems().map(function(s){return "<div class='drow'><span class='badge low'>LOW</span><b>"+s.product+"</b><span class='hint'>"+s.qty+" left</span><button class='x' onclick=\"dismissLow('"+s.code+"')\">×</button></div>"}).join("")||"<div class='drow hint'>No low regular sellers</div>"}}
+function dismissLow(code){state.dismissed[code]=1;save();updateBell();toggleDrop();draw()}
+function drawStock(){var q=(document.getElementById("q").value||"").toLowerCase();var sec=document.getElementById("s-sec").value,man=document.getElementById("s-man").value;var rows=[];secs().forEach(function(s){if(sec&&s!==sec)return;mans(s).forEach(function(m){if(man&&m!==man)return;items(s,m).forEach(function(x){var sq=stockQty(x[0]);var sold=(state.jobs||[]).concat(state.cols||[]).filter(function(j){return j.code===x[0]}).length;rows.push({code:x[0],name:x[1],sec:s,man:m,qty:sq,sold:sold})})})});rows=rows.filter(function(r){return !q||r.code.toLowerCase().indexOf(q)>=0||r.name.toLowerCase().indexOf(q)>=0});rows.sort(function(a,b){return b.qty-a.qty||a.name.localeCompare(b.name)});document.getElementById("stockList").innerHTML=rows.map(function(r){var low=r.sold>=2&&r.qty<=3;return "<div class='srow item'><div class='img'></div><div class='meta'><b>"+r.name+"</b><div class='sub'>"+r.sec+" · "+r.man+" · "+r.code+"</div></div><div class='qty'>"+r.qty+"<small>AVAILABLE</small></div>"+(low?"<span class='badge low'>LOW</span>":"<span class='badge ok'>OK</span>")+"</div>"}).join("")||"<p class='hint'>No items match.</p>";updateBell()}
 function draw(){drawStock();
-document.getElementById("buyList").innerHTML=(state.ins||[]).map(function(p){return row("<b>"+p.product+"</b><div>"+p.date+" · "+(p.supplier||"")+" · recv "+(p.by||"")+" · qty "+p.qty+"</div>")}).join("");
-document.getElementById("jobList").innerHTML=(state.jobs||[]).map(function(j){return row("<b>"+j.product+"</b><div>"+j.date+" · "+j.by+" · "+j.site+" · qty "+j.qty+"</div><button class='btn danger' onclick=\"delJob('"+j.id+"')\">Delete and return to stock</button>")}).join("")||"<p class='hint'>None yet.</p>";
-document.getElementById("colList").innerHTML=(state.cols||[]).map(function(c){return row("<b>"+c.product+"</b><div>"+c.type+" · "+(c.name||"")+"</div>")}).join("");
-document.getElementById("ohkList").innerHTML=(state.ohk||[]).map(function(o){return row("<b>"+o.serial+"</b>")}).join("");
-document.getElementById("faultList").innerHTML=(state.faulty||[]).map(function(f){return row("<b>"+f.serial+"</b><div>"+f.note+"</div>")}).join("");
-document.getElementById("logList").innerHTML=(state.jobs||[]).map(function(j){return row("<b>"+j.product+"</b><div>"+j.date+" · taken by "+j.by+" · "+j.site+"</div>")}).join("")||"<p class='hint'>No removals logged.</p>";
-document.getElementById("peopleList").innerHTML=(state.people||[]).map(function(p){return row("<b>"+p.name+"</b><div>"+p.code+" · "+p.role+"</div>")}).join("")}
-function delJob(id){var j=state.jobs.find(function(x){return x.id===id});if(!j)return;if(!confirm("Delete and put back into stock?"))return;var line=state.stock.find(function(s){return s.product===j.product});if(line)line.qty+=j.qty;else state.stock.push({id:uid(),product:j.product,qty:j.qty});state.jobs=state.jobs.filter(function(x){return x.id!==id});save();draw()}
+document.getElementById("buyList").innerHTML=(state.ins||[]).map(function(p){return "<div class='item'><b>"+p.product+"</b><div>"+p.date+" · "+(p.supplier||"")+" · recv "+(p.by||"")+" · qty "+p.qty+(p.cost?" · £"+p.cost:"")+"</div></div>"}).join("")||"<p class='hint'>None yet.</p>";
+document.getElementById("histList").innerHTML=(state.ins||[]).map(function(p){return "<div class='item'><b>"+p.date+"</b> "+p.product+" · "+(p.supplier||"no supplier")+" · £"+(p.cost||0)+" × "+p.qty+" · "+(p.by||"")+"</div>"}).join("")||"<p class='hint'>No purchases yet.</p>";
+document.getElementById("jobList").innerHTML=(state.jobs||[]).map(function(j){return "<div class='item'><b>"+j.product+"</b><div>"+j.date+" · "+j.by+" · "+j.site+" · qty "+j.qty+(j.cost?" · £"+(j.cost*j.qty).toFixed(2):"")+"</div><button class='btn danger' onclick=\"delJob('"+j.id+"')\">Delete · return to stock</button></div>"}).join("")||"<p class='hint'>None yet.</p>";
+document.getElementById("colList").innerHTML=(state.cols||[]).map(function(c){return "<div class='item'><b>"+c.product+"</b><div>"+c.date+" · "+c.type+" · "+(c.name||"")+(c.ref?" · ref "+c.ref:"")+(c.cost?" · £"+c.cost:"")+"</div></div>"}).join("")||"<p class='hint'>None yet.</p>";
+document.getElementById("ohkList").innerHTML=(state.ohk||[]).map(function(o){return "<div class='item'><b>"+o.serial+"</b><div>"+o.date+"</div></div>"}).join("")||"<p class='hint'>None yet.</p>";
+document.getElementById("faultList").innerHTML=(state.faulty||[]).map(function(f){return "<div class='item'><b>"+f.serial+"</b><div>"+f.note+" · "+f.by+"</div></div>"}).join("")||"<p class='hint'>None yet.</p>";
+document.getElementById("logList").innerHTML=(state.jobs||[]).map(function(j){return "<div class='item'><b>"+j.product+"</b><div>"+j.date+" · taken by "+j.by+" · "+j.site+" · qty "+j.qty+"</div></div>"}).join("")||"<p class='hint'>No removals logged.</p>";
+document.getElementById("peopleList").innerHTML=(state.people||[]).map(function(p){return "<div class='item'><b>"+p.name+"</b><div>"+p.code+" · "+p.role+"</div></div>"}).join("");
+updateBell()}
+function mailLog(){state.emails=document.getElementById("emails").value.trim();save();var m=new Date().toISOString().slice(0,7);var rows=state.jobs.filter(function(j){return String(j.date||"").slice(0,7)===m});var body="Green Energy Store stock taken "+m+"\n\n";rows.forEach(function(j){body+=j.date+" | "+j.by+" | "+j.site+" | "+j.product+" | qty "+j.qty+(j.cost?" | £"+(j.cost*j.qty).toFixed(2):"")+"\n"});location.href="mailto:"+encodeURIComponent(state.emails)+"?subject="+encodeURIComponent("GES monthly stock log")+"&body="+encodeURIComponent(body)}
+function toast(t){var x=document.getElementById("toast");x.textContent=t;x.style.display="block";clearTimeout(window._tt);window._tt=setTimeout(function(){x.style.display="none"},2500)}
+function openCam(mode){CAM=mode;document.getElementById("cam").classList.add("on");startCam()}
+function closeCam(){document.getElementById("cam").classList.remove("on");if(VID){VID.getTracks().forEach(function(t){t.stop()});VID=null}}
+function startCam(){var r=document.getElementById("reader");r.innerHTML='<video id="v" playsinline></video>';VID=document.getElementById("v");navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(s){VID.srcObject=s;VID.play();requestAnimationFrame(tick)}).catch(function(){toast("Camera blocked — allow camera in browser settings")})}
+function tick(){if(!VID||VID.readyState<2){requestAnimationFrame(tick);return}var c=document.createElement("canvas");c.width=VID.videoWidth;c.height=VID.videoHeight;var ctx=c.getContext("2d");ctx.drawImage(VID,0,0);try{var d=ctx.getImageData(0,0,c.width,c.height);var code=jsQR(d.data,d.width,d.height);if(code){SNAP=code.data;closeCam();handleScan(code.data);return}}catch(e){}requestAnimationFrame(tick)}
+function snapCam(){if(!VID)return;var c=document.createElement("canvas");c.width=VID.videoWidth;c.height=VID.videoHeight;c.getContext("2d").drawImage(VID,0,0);SNAP=c.toDataURL("image/jpeg",0.7);closeCam();handleScan(SNAP)}
+function handleScan(data){var serial="";if(typeof data==="string"&&data.length<40&&!data.startsWith("data:"))serial=data;else serial="SCAN-"+uid().slice(-6);if(CAM=="stock"){var ex=state.stock.find(function(s){return s.code===serial});if(ex)ex.qty+=1;else{var found=null;secs().forEach(function(sec){mans(sec).forEach(function(man){items(sec,man).forEach(function(x){if(x[0]===serial)found={sec:sec,man:man,code:x[0],name:x[1]}})})});state.stock.push(found?{id:uid(),code:found.code,product:found.name,sec:found.sec,man:found.man,qty:1,cost:0,reorder:1}:{id:uid(),code:serial,product:"Scanned item",sec:"Accessories",man:"General",qty:1,cost:0,reorder:1})}save();toast("Added "+serial);draw()}
+else if(CAM=="job"){document.getElementById("j-serial").value=serial;toast("Serial captured — pick item & site, then log")}
+else if(CAM=="ohk"){document.getElementById("o-serial").value=serial;toast("Serial captured")}}
+var sigCanvas=document.getElementById("sig"),sigCtx=sigCanvas.getContext("2d"),drawing=false,last=null;
+function pos(e){var r=sigCanvas.getBoundingClientRect();var t=e.touches?e.touches[0]:e;return{x:(t.clientX-r.left)*(sigCanvas.width/r.width),y:(t.clientY-r.top)*(sigCanvas.height/r.height)}}
+function startSig(e){drawing=true;last=pos(e);e.preventDefault()}
+function moveSig(e){if(!drawing)return;var p=pos(e);sigCtx.strokeStyle="#011E41";sigCtx.lineWidth=2;sigCtx.beginPath();sigCtx.moveTo(last.x,last.y);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();last=p;e.preventDefault()}
+function endSig(){drawing=false}
+sigCanvas.addEventListener("mousedown",startSig);sigCanvas.addEventListener("mousemove",moveSig);sigCanvas.addEventListener("mouseup",endSig);sigCanvas.addEventListener("mouseleave",endSig);
+sigCanvas.addEventListener("touchstart",startSig);sigCanvas.addEventListener("touchmove",moveSig);sigCanvas.addEventListener("touchend",endSig);
+function clearSig(){sigCtx.clearRect(0,0,sigCanvas.width,sigCanvas.height)}
+function getSig(){return sigCanvas.toDataURL("image/png")}
 if(user().name)goHome();
 </script></body></html>
