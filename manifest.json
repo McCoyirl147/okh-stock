@@ -1,0 +1,9 @@
+{
+  "name": "Okh Stock",
+  "short_name": "Okh Stock",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#1B5E20",
+  "theme_color": "#1B5E20",
+  "description": "Scan unit barcodes into warehouse, jobs, Okh returns and pickups."
+}
